@@ -11,7 +11,7 @@ function db_open() {
     global $db_conn;
     $db_conn = mysqli_connect(DB_HOST, DB_USERNAME, DB_PASSWORD, DB_NAME);
     if (!$db_conn)
-    die("Connection to database failed: " . mysqli_connect_error());
+    die("Failed to connect to the database: " . mysqli_connect_error());
 }
 
 function db_close() {
