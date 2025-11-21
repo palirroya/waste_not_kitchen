@@ -46,4 +46,8 @@ CREATE TABLE Orders (
     FOREIGN KEY (plate_id) REFERENCES Plates(id)
 ) ENGINE=InnoDB;
 
-INSERT INTO Users (role, username, password_hash, name) VALUES ("admin", "admin", SHA2("admin", 256), "Admin");
+INSERT INTO Users (role, username, password_hash, name) VALUES ("admin", "admin", SHA2("admin", 256), "Administrator");
+INSERT INTO Users (role, username, password_hash, name) VALUES ("restaurant", "restaurant", SHA2("restaurant", 256), "Restaurant");
+INSERT INTO Users (role, username, password_hash, name) VALUES ("customer", "customer", SHA2("customer", 256), "Customer");
+INSERT INTO Users (role, username, password_hash, name) VALUES ("donor", "donor", SHA2("donor", 256), "Donor");
+INSERT INTO Users (role, username, password_hash, name) VALUES ("in_need", "in_need", SHA2("in_need", 256), "In Need");

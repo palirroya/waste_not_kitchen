@@ -33,8 +33,10 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 <h1>Log in</h1>
 <a href="index.php">Home</a>
 
+<p>Note: logins are admin/admin, restaurant/restaurant, customer/customer, donor/donor, in_need/in_need</p>
+
 <form action="login.php" method="POST">
     <input type="string" placeholder="Username" name="username"></input>
-    <input type="password" paceholder="Password" name="password"></input>
+    <input type="password" placeholder="Password" name="password"></input>
     <input type="submit" />
 </form>

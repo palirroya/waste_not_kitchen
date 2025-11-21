@@ -14,3 +14,5 @@ if ($auth_is_logged_in == false) {
 <a href="index.php">Home</a>
 <p>You are currently logged in. Your information is:</p>
 <b><?php print_r($_SESSION["user"]) ?></b>
+
+<p><a href="<?php echo $_SESSION["user"]["role"] ?>_homepage.php">Go to my role-specific homepage</a></p>
