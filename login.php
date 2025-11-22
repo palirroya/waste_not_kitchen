@@ -145,7 +145,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                    style="font-weight: 600; color: navy;">
                    <a href="./register.php" style="text-decoration: none;">Create Account</a>
                    OR
-                   <a href="./resetpassword.php" style="text-decoration: none;">Forgot Password</a>
+                   <a href="./reset_password.php" style="text-decoration: none;">Forgot Password</a>
                 </p>
             </div>
         </form>

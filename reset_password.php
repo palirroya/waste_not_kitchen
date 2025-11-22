@@ -17,9 +17,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     } else {
         $password_hashed = hash('sha256', $password);
 
-        $sql = "UPDATE users 
-                SET password_hash = ?
-                WHERE username = ?";
+        $sql = "UPDATE users SET password_hash = ? WHERE username = ?";
         $stmt = mysqli_prepare($db_conn, $sql);
         mysqli_stmt_bind_param($stmt, "ss", $password_hashed, $username);
         mysqli_stmt_execute($stmt);
