@@ -36,14 +36,28 @@ CREATE TABLE Orders (
     id INT AUTO_INCREMENT PRIMARY KEY,
     user_id INT NOT NULL,
     plate_id INT NOT NULL,
-    is_donation BOOLEAN NOT NULL,
-    reserved_id INT,
     quantity INT NOT NULL,
     total_price DECIMAL(10, 2) NOT NULL,
-    status enum("in_cart", "purchased", "cancelled"),
-    FOREIGN KEY (reserved_id) REFERENCES Users(id),
+    status ENUM("in_cart", "purchased", "cancelled"),
     FOREIGN KEY (user_id) REFERENCES Users(id),
     FOREIGN KEY (plate_id) REFERENCES Plates(id)
+) ENGINE=InnoDB;
+
+CREATE TABLE DonatedOrders (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    order_id INT NOT NULL,
+    quantity_available INT NOT NULL,
+    FOREIGN KEY (order_id) REFERENCES Orders(id)
+) ENGINE=InnoDB;
+
+CREATE TABLE DonatedOrderClaims (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    donated_order_id INT NOT NULL,
+    quantity INT NOT NULL,
+    in_need_user_id INT NOT NULL,
+    status ENUM("in_cart", "claimed", "cancelled"),
+    FOREIGN KEY (donated_order_id) REFERENCES DonatedOrders(id),
+    FOREIGN KEY (in_need_user_id) REFERENCES Users(id)
 ) ENGINE=InnoDB;
 
 INSERT INTO Users (role, username, password_hash, name) VALUES ("admin", "admin", SHA2("admin", 256), "Administrator");

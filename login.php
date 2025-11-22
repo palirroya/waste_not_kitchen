@@ -20,7 +20,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     } else {
         $password_hashed = hash('sha256', $password);
 
-        $sql = "SELECT id, role, username, password_hash FROM users WHERE username = ?";
+        $sql = "SELECT id, role, username, password_hash, name FROM users WHERE username = ?";
         $stmt = mysqli_prepare($db_conn, $sql);
         mysqli_stmt_bind_param($stmt, "s", $username);
         mysqli_stmt_execute($stmt);
@@ -31,7 +31,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 $userData = [
                     "id"       => $row["id"],
                     "role"     => $row["role"],
-                    "username" => $row["username"]
+                    "username" => $row["username"],
+                    "name"     => $row["name"]
                 ];
 
                 // set $auth_is_logged_in = true
