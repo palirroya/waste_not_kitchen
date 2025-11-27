@@ -15,6 +15,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     $username = trim($_POST['username'] ?? '');
     $password = $_POST['password'] ?? '';
+    $role = $_POST['role'] ?? 'in_need';
+
+    $allowed_roles = ['restaurant', 'customer', 'donor', 'in_need'];
+    // fallback default
+    if (!in_array($role, $allowed_roles)) {
+        $role = 'in_need';
+    }
 
     if ($username === '' || $password === '') {
         $message = "Username and password are required.";
@@ -30,16 +37,21 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         } else {
             $password_hashed = hash('sha256', $password);
 
-            $role    = 'in_need';
-            $name    = 'NULL';
-            $address = 'NULL';
-            $phone   = 'NULL';
+            $name = trim($_POST['name'] ?? '');
+            $address = trim($_POST['address'] ?? '');
+            $phone = trim($_POST['phone'] ?? '');
 
-            $sql = "INSERT INTO users (role, username, password_hash, name, address, phone)
-                    VALUES (?, ?, ?, ?, ?, ?)";
+            $sql = "INSERT INTO users (role, username, password_hash, name, address, phone) VALUES (?, ?, ?, ?, ?, ?)";
             $stmt = mysqli_prepare($db_conn, $sql);
-            mysqli_stmt_bind_param($stmt, "ssssss",
-                $role, $username, $password_hashed, $name, $address, $phone
+            mysqli_stmt_bind_param(
+                $stmt,
+                "ssssss",
+                $role,
+                $username,
+                $password_hashed,
+                $name,
+                $address,
+                $phone
             );
 
             if (mysqli_stmt_execute($stmt)) {
@@ -64,63 +76,76 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link href=
-"https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link rel="stylesheet" href=
-"https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.css">
-    <link rel="shortcut icon" href=
-"https://cdn-icons-png.flaticon.com/512/295/295128.png">
-    <script src=
-"https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"></script>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.css">
+    <link rel="shortcut icon" href="https://cdn-icons-png.flaticon.com/512/295/295128.png">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"></script>
     <title>Registration</title>
 </head>
 
 <body class="bg-light">
     <div class="container p-5 d-flex flex-column align-items-center">
         <?php if ($message): ?>
-            <div class="toast align-items-center text-white border-0" 
-          role="alert" aria-live="assertive" aria-atomic="true"
+            <div class="toast align-items-center text-white border-0" role="alert" aria-live="assertive" aria-atomic="true"
                 style="background-color: <?php echo $toastClass; ?>;">
                 <div class="d-flex">
                     <div class="toast-body">
                         <?php echo htmlspecialchars($message); ?>
                     </div>
                     <button type="button" class="btn-close
-                    btn-close-white me-2 m-auto" 
-                          data-bs-dismiss="toast"
-                        aria-label="Close"></button>
+                    btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
                 </div>
             </div>
         <?php endif; ?>
         <form method="post" class="form-control mt-5 p-4"
-            style="height:auto; width:380px;
-            box-shadow: rgba(60, 64, 67, 0.3) 0px 1px 2px 0px,
-            rgba(60, 64, 67, 0.15) 0px 2px 6px 2px;">
-            <div class="row text-center">
-                <i class="fa fa-user-circle-o fa-3x mt-1 mb-2" style="color: green;"></i>
-                <h5 class="p-4" style="font-weight: 700;">Create Your Account</h5>
+            style="height:auto; width:380px; box-shadow: rgba(60, 64, 67, 0.3) 0px 1px 2px 0px, rgba(60, 64, 67, 0.15) 0px 2px 6px 2px;">
+            <div class="row text-center mb-3">
+                <div class="col-12">
+                    <i class="fa fa-user-circle-o fa-3x mt-1 mb-2" style="color: green;"></i>
+                    <h5 class="p-2" style="font-weight: 700;">Create Your Account</h5>
+                </div>
             </div>
-            <div class="mb-2">
-                <label for="username"><i 
-                  class="fa fa-user"></i> Username</label>
-                <input type="text" name="username" id="username"
-                  class="form-control" required>
+
+            <div class="mb-3">
+                <label for="role" class="form-label"><i class="fa fa-users"></i> Account Type</label>
+                <select name="role" id="role" class="form-select" required>
+                    <option value="in_need">In Need</option>
+                    <option value="customer">Customer</option>
+                    <option value="donor">Donor</option>
+                    <option value="restaurant">Restaurant</option>
+                </select>
             </div>
-            <div class="mb-2 mt-2">
-                <label for="password"><i 
-                  class="fa fa-lock"></i> Password</label>
-                <input type="password" name="password" id="password"
-                  class="form-control" required>
+
+            <div class="mb-3">
+                <label for="username" class="form-label"><i class="fa fa-user"></i> Username
+                    <span class="text-muted small">(Required)</span></label>
+                <input type="text" name="username" id="username" class="form-control" required>
             </div>
-            <div class="mb-2 mt-3">
-                <button type="submit" 
-                  class="btn btn-success
-                bg-success" style="font-weight: 600;">Create
-                    Account</button>
+            <div class="mb-3">
+                <label for="password" class="form-label"><i class="fa fa-lock"></i> Password
+                    <span class="text-muted small">(Required)</span></label>
+                <input type="password" name="password" id="password" class="form-control" required>
             </div>
-            <div class="mb-2 mt-4">
-                <p class="text-center" style="font-weight: 600; 
-                color: navy;">I have an Account <a href="./login.php"
+            <hr class="my-4">
+            <div class="mb-3">
+                <label for="name" class="form-label"><i class="fa fa-address-card"></i> Name
+                    <span class="text-muted small">(Required)</span></label>
+                <input type="text" name="name" id="name" class="form-control" required>
+            </div>
+            <div class="mb-3">
+                <label for="address" class="form-label"><i class="fa fa-map-marker"></i> Address</label>
+                <input type="text" name="address" id="address" class="form-control">
+            </div>
+            <div class="mb-3">
+                <label for="phone" class="form-label"><i class="fa fa-phone"></i> Phone</label>
+                <input type="tel" name="phone" id="phone" class="form-control">
+            </div>
+
+            <div class="d-grid gap-2 mt-4">
+                <button type="submit" class="btn btn-success" style="font-weight: 600;">Create Account</button>
+            </div>
+            <div class="mt-3 text-center">
+                <p style="font-weight: 600; color: navy;">I have an Account <a href="./login.php"
                         style="text-decoration: none;">Login</a></p>
             </div>
         </form>

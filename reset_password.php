@@ -40,39 +40,30 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" 
-          content="width=device-width, initial-scale=1.0">
-    <link href=
-"https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link rel="stylesheet" href=
-"https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.css">
-    <link rel="shortcut icon" href=
-"https://cdn-icons-png.flaticon.com/512/295/295128.png">
-    <script src=
-"https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"></script>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.css">
+    <link rel="shortcut icon" href="https://cdn-icons-png.flaticon.com/512/295/295128.png">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"></script>
     <title>Reset Password</title>
 </head>
 
 <body class="bg-light">
     <div class="container p-5 d-flex flex-column align-items-center">
         <?php if ($message): ?>
-            <div class="toast align-items-center text-white border-0" 
-          role="alert" aria-live="assertive" aria-atomic="true"
+            <div class="toast align-items-center text-white border-0" role="alert" aria-live="assertive" aria-atomic="true"
                 style="background-color: <?php echo $toastClass; ?>;">
                 <div class="d-flex">
                     <div class="toast-body">
                         <?php echo htmlspecialchars($message); ?>
                     </div>
                     <button type="button" class="btn-close
-                    btn-close-white me-2 m-auto" 
-                          data-bs-dismiss="toast"
-                        aria-label="Close"></button>
+                    btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
                 </div>
             </div>
         <?php endif; ?>
 
-        <form method="post" class="form-control mt-5 p-4"
-            style="height:auto; width:380px;
+        <form method="post" class="form-control mt-5 p-4" style="height:auto; width:380px;
             box-shadow: rgba(60, 64, 67, 0.3) 0px 1px 2px 0px,
             rgba(60, 64, 67, 0.15) 0px 2px 6px 2px;">
             <div class="row text-center">
@@ -80,26 +71,20 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 <h5 class="p-4" style="font-weight: 700;">Reset Your Password</h5>
             </div>
             <div class="mb-2">
-                <label for="username"><i 
-                  class="fa fa-user"></i> Username</label>
-                <input type="text" name="username" id="username"
-                  class="form-control" required>
+                <label for="username"><i class="fa fa-user"></i> Username</label>
+                <input type="text" name="username" id="username" class="form-control" required>
             </div>
             <div class="mb-2 mt-2">
-                <label for="password"><i 
-                  class="fa fa-lock"></i> New Password</label>
-                <input type="password" name="password" id="password"
-                  class="form-control" required>
+                <label for="password"><i class="fa fa-lock"></i> New Password</label>
+                <input type="password" name="password" id="password" class="form-control" required>
             </div>
             <div class="mb-2 mt-3">
-                <button type="submit" 
-                  class="btn btn-success
+                <button type="submit" class="btn btn-success
                 bg-success" style="font-weight: 600;">Reset Password</button>
             </div>
             <div class="mb-2 mt-4">
                 <p class="text-center" style="font-weight: 600; 
-                color: navy;">Back to <a href="./login.php"
-                        style="text-decoration: none;">Login</a></p>
+                color: navy;">Back to <a href="./login.php" style="text-decoration: none;">Login</a></p>
             </div>
         </form>
     </div>
