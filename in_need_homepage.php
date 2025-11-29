@@ -16,34 +16,24 @@ if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST["plate_id"], $_POST["q
     $plate_id = intval($_POST["plate_id"]);
     $quantity = intval($_POST["quantity"]);
 
-    $stmt = $db_conn->prepare("SELECT price FROM Plates WHERE id=? LIMIT 1");
-    $stmt->bind_param("i", $plate_id);
+    // Create claim
+    $stmt = $db_conn->prepare("
+        INSERT INTO DonatedOrderClaims (in_need_user_id, donated_order_id, quantity, status)
+        VALUES (?, ?, ?, 'in_cart')
+    ");
+    $stmt->bind_param("iii", $user_id, $plate_id, $quantity);
     $stmt->execute();
-    $result = $stmt->get_result();
-    $plate = $result->fetch_assoc();
 
-    if ($plate) {
-        $total = $plate["price"] * $quantity;
+    // Reduce plate quantity
+    $stmt = $db_conn->prepare("
+        UPDATE DonatedOrders
+        SET quantity_available = quantity_available - ?
+        WHERE id = ?
+    ");
+    $stmt->bind_param("ii", $quantity, $plate_id);
+    $stmt->execute();
 
-        // Create claim
-        $stmt = $db_conn->prepare("
-            INSERT INTO DonatedOrderClaims (in_need_user_id, donated_order_id, quantity, status)
-            VALUES (?, ?, ?, 'in_cart')
-        ");
-        $stmt->bind_param("iii", $user_id, $plate_id, $quantity);
-        $stmt->execute();
-
-        // Reduce plate quantity
-        $stmt = $db_conn->prepare("
-            UPDATE DonatedOrders
-            SET quantity_available = quantity_available - ?
-            WHERE id = ?
-        ");
-        $stmt->bind_param("ii", $quantity, $plate_id);
-        $stmt->execute();
-
-        $message = "Added to cart!";
-    }
+    $message = "Added to cart!";
 }
 ?>
 <!DOCTYPE html>
