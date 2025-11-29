@@ -1,18 +1,17 @@
 <?php
-session_start();
+
 require_once("auth.php");
 auth_init();
-
 if (!$auth_is_logged_in && $_SESSION["user"]["role"] !== "in_need") {
     header("Location: login.php");
     exit();
 }
 
-$user_id = $_SESSION["user"]["id"];
 require_once("database.php");
 db_open();
 $message = null;
 $actions_disabled = false;
+$user_id = $_SESSION["user"]["id"];
 
 if (isset($_POST["confirm"])) {
 
