@@ -51,6 +51,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST["plate_id"], $_POST["q
 <head>
     <title>Customer Homepage</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.css">
 </head>
 <body class="bg-light">
 <div class="container py-4">
@@ -58,7 +59,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST["plate_id"], $_POST["q
     <h1 class="mb-4">Welcome, <?= htmlspecialchars($_SESSION["user"]["name"]) ?></h1>
 
     <div class="mb-4">
-        <a class="btn btn-dark" href="index.php">Home</a>
+        <a class="btn btn-dark" href="index.php"><i class="fa fa-home"></i> Home</a>
         <a class="btn btn-dark" href="user_profile.php">My Profile</a>
         <a class="btn btn-dark" href="donor_checkout.php">View my Cart (<?php require_once("cart_size.php"); ?>)</a>
         <a class="btn btn-danger float-end" href="logout.php">Log out</a>
