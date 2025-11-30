@@ -59,6 +59,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST["plate_id"], $_POST["q
 
     <div class="mb-4">
         <a class="btn btn-dark" href="index.php">Home</a>
+        <a class="btn btn-dark" href="user_profile.php">My Profile</a>
         <a class="btn btn-dark" href="customer_checkout.php">View my Cart (<?php require_once("cart_size.php"); ?>)</a>
         <a class="btn btn-danger float-end" href="logout.php">Log out</a>
     </div>
