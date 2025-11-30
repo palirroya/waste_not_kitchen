@@ -64,23 +64,30 @@ if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST["plate_id"], $_POST["q
             <table class="table table-bordered">
                 <?php
                 $plates = $db_conn->query(" 
-                    SELECT Plates.description, DonatedOrders.quantity_available, DonatedOrders.id
-                    FROM Plates 
-                    JOIN Orders ON Orders.plate_id = Plates.id 
-                    JOIN DonatedOrders ON DonatedOrders.order_id = Orders.id 
-                    WHERE DonatedOrders.quantity_available > 0;
+                    SELECT u1.name AS restaurant_name, p.description, d.quantity_available,
+                    d.id, u2.name AS donator_name
+                    FROM Plates p 
+                    JOIN Orders o ON o.plate_id = p.id 
+                    JOIN DonatedOrders d ON d.order_id = o.id 
+                    JOIN Users u1 ON p.owner_id = u1.id
+                    JOIN Users u2 ON o.user_id = u2.id
+                    WHERE d.quantity_available > 0;
                 ");
                 if ($plates->num_rows === 0) { ?>
                     <p>There are no donated plates that you can reserve at this time.</p>
                 <?php } else { ?>
                     <tr>
+                        <th>Restaurant</th>
                         <th>Plate</th>
+                        <th>Donator</th>
                         <th>Available Quantity</th>
                         <th>Quantity to Reserve</th>
                     </tr>
                     <?php while ($p = $plates->fetch_assoc()) { ?>
                     <tr>
+                        <td><?php echo htmlspecialchars($p["restaurant_name"]); ?></td>
                         <td><?php echo htmlspecialchars($p["description"]); ?></td>
+                        <td><?php echo htmlspecialchars($p["donator_name"]); ?></td>
                         <td><?php echo intval($p["quantity_available"]); ?></td>
                         <td>
                             <form method='POST' class='d-flex gap-2'>
@@ -101,24 +108,31 @@ if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST["plate_id"], $_POST["q
             <table class="table table-bordered">
                 <?php
                 $history = $db_conn->query("
-                    SELECT Plates.description, DonatedOrderClaims.quantity
-                    FROM Plates
-                    JOIN Orders ON Plates.id = Orders.plate_id
-                    JOIN DonatedOrders ON DonatedOrders.order_id = Orders.id
-                    JOIN DonatedOrderClaims ON DonatedOrderClaims.donated_order_id = DonatedOrders.id
+                    SELECT u1.name AS restaurant_name, p.description, c.quantity,
+                    u2.name AS donator_name
+                    FROM Plates p
+                    JOIN Orders o ON p.id = o.plate_id
+                    JOIN DonatedOrders d ON d.order_id = o.id
+                    JOIN DonatedOrderClaims c ON c.donated_order_id = d.id
+                    JOIN Users u1 ON p.owner_id = u1.id
+                    JOIN Users u2 ON o.user_id = u2.id
                     WHERE in_need_user_id = $user_id
-                    AND DonatedOrderClaims.status = 'claimed'
+                    AND c.status = 'claimed'
                 ");
                 if ($history->num_rows === 0) { ?>
                     <p>No history on record.</p>
                 <?php } else { ?>
                     <tr>
+                        <th>Restaurant</th>
                         <th>Plate</th>
+                        <th>Donator</th>
                         <th>Quantity</th>
                     </tr>
                     <?php while ($h = $history->fetch_assoc()) { ?>
                     <tr>
+                        <td><?php echo htmlspecialchars($h["restaurant_name"]); ?></td>
                         <td><?php echo htmlspecialchars($h["description"]); ?></td>
+                        <td><?php echo htmlspecialchars($h["donator_name"]); ?></td>
                         <td><?php echo intval($h["quantity"]); ?></td>
                     </tr>
                 <?php } } ?>
