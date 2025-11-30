@@ -1,18 +1,17 @@
 <?php
-session_start();
+
 require_once("auth.php");
 auth_init();
-
 if (!$auth_is_logged_in && $_SESSION["user"]["role"] !== "customer") {
     header("Location: login.php");
     exit();
 }
 
-$user_id = $_SESSION["user"]["id"];
 require_once("database.php");
 db_open();
 $message = null;
 $actions_disabled = false;
+$user_id = $_SESSION["user"]["id"];
 
 if (isset($_POST["confirm"])) {
 
@@ -93,66 +92,9 @@ if (isset($_POST["cancel"])) {
         <div class="alert alert-info"><?= htmlspecialchars($message) ?></div>
     <?php } ?>
 
-    <div class="card mb-4">
-        <div class="card-header bg-primary text-white">Reserved Plates in Your Cart</div>
-        <div class="card-body">
-            <?php
-            $stmt = $db_conn->prepare("
-                SELECT Orders.quantity, Orders.total_price, Plates.description
-                FROM Orders
-                JOIN Plates ON Orders.plate_id = Plates.id
-                WHERE Orders.user_id=? AND Orders.status='in_cart'
-            ");
-            $stmt->bind_param("i", $user_id);
-            $stmt->execute();
-            $plates = $stmt->get_result();
-            $grand_total = 0;
-            if ($plates->num_rows === 0) {
-                $actions_disabled = true; ?>
-                <p>You do not have any plates.</p>
-            <?php } else { ?>
-                <table class="table table-bordered">
-                    <tr>
-                        <th>Plate</th>
-                        <th>Quantity</th>
-                        <th>Total</th>
-                    </tr>
-                    <?php while ($p = $plates->fetch_assoc()) {
-                        $grand_total += $p["total_price"]; ?>
-                    <tr>
-                        <td><?php echo htmlspecialchars($p["description"]); ?></td>
-                        <td><?php echo intval($p["quantity"]); ?></td>
-                        <td>$<?php echo number_format($p["total_price"], 2); ?></td>
-                    </tr>
-            <?php }?>
-                </table>
-                <h4>Grand Total: $<?php echo number_format($grand_total, 2); ?></h4>
-            <?php } ?>
-        </div>
-    </div>
+    <?php require_once("list_reserved_purchasable_plates.php"); ?>
 
-    <div class="card mb-4">
-        <div class="card-header bg-secondary text-white">Saved Credit Card</div>
-        <div class="card-body">
-            <?php
-            $stmt = $db_conn->prepare("
-                SELECT card_number, card_expiry
-                FROM CreditCards
-                WHERE user_id = ?
-                LIMIT 1
-            ");
-            $stmt->bind_param("i", $user_id);
-            $stmt->execute();
-            $card = $stmt->get_result()->fetch_assoc();
-            if (!$card) { ?>
-                <p>You do not have a saved credit card on file.</p>
-            <?php } else { ?>
-                <p>You will use the following saved credit card on file to complete this purchase:</p>
-                <p>Card ending in <strong><?php echo substr($card["card_number"], -4) ?></strong>
-                with expiry <strong><?php echo $card["card_expiry"] ?></strong></p>
-            <?php } ?>
-        </div>
-    </div>
+    <?php require_once("list_credit_card_details.php"); ?>
 
     <form method="POST" class="d-flex gap-2">
         <button name="confirm" class="btn btn-success <?php if ($actions_disabled) echo "disabled" ?>">Confirm Purchase</button>

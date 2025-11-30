@@ -1,18 +1,17 @@
 <?php
-session_start();
+
 require_once("auth.php");
 auth_init();
-
 if (!$auth_is_logged_in && $_SESSION["user"]["role"] !== "in_need") {
     header("Location: login.php");
     exit();
 }
 
-$user_id = $_SESSION["user"]["id"];
 require_once("database.php");
 db_open();
 $message = null;
 $actions_disabled = false;
+$user_id = $_SESSION["user"]["id"];
 
 if (isset($_POST["confirm"])) {
 
@@ -106,13 +105,16 @@ if (isset($_POST["cancel"])) {
         <div class="card-body">
             <?php
             $plates = $db_conn->query("
-                SELECT Plates.description, DonatedOrderClaims.quantity
-                FROM Plates 
-                JOIN Orders ON Orders.plate_id = Plates.id 
-                JOIN DonatedOrders ON DonatedOrders.order_id = Orders.id 
-			    JOIN DonatedOrderClaims ON DonatedOrderClaims.donated_order_id = DonatedOrders.id
-                WHERE DonatedOrderClaims.status = 'in_cart'
-		        AND DonatedOrderClaims.in_need_user_id = $user_id
+                SELECT u1.name AS restaurant_name, p.description, c.quantity, 
+                u2.name AS donator_name
+                FROM Plates p
+                JOIN Orders o ON o.plate_id = p.id 
+                JOIN DonatedOrders d ON d.order_id = o.id 
+			    JOIN DonatedOrderClaims c ON c.donated_order_id = d.id
+                JOIN Users u1 ON p.owner_id = u1.id
+                JOIN Users u2 ON o.user_id = u2.id
+                WHERE c.status = 'in_cart'
+		        AND c.in_need_user_id = $user_id
             ");
             if ($plates->num_rows === 0) { 
                 $actions_disabled = true; ?>
@@ -120,12 +122,16 @@ if (isset($_POST["cancel"])) {
             <?php } else { ?>
                 <table class="table table-bordered">
                     <tr>
+                        <th>Restaurant</th>
                         <th>Plate</th>
+                        <th>Donator</th>
                         <th>Quantity</th>
                     </tr>
                     <?php while ($p = $plates->fetch_assoc()) { ?>
                     <tr>
+                        <td><?php echo htmlspecialchars($p["restaurant_name"]); ?></td>
                         <td><?php echo htmlspecialchars($p["description"]); ?></td>
+                        <td><?php echo htmlspecialchars($p["donator_name"]); ?></td>
                         <td><?php echo intval($p["quantity"]); ?></td>
                     </tr>
             <?php }?>
