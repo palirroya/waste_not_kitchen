@@ -60,8 +60,31 @@ CREATE TABLE DonatedOrderClaims (
     FOREIGN KEY (in_need_user_id) REFERENCES Users(id)
 ) ENGINE=InnoDB;
 
-INSERT INTO Users (role, username, password_hash, name) VALUES ("admin", "admin", SHA2("admin", 256), "Administrator");
-INSERT INTO Users (role, username, password_hash, name) VALUES ("restaurant", "restaurant", SHA2("restaurant", 256), "Restaurant");
-INSERT INTO Users (role, username, password_hash, name) VALUES ("customer", "customer", SHA2("customer", 256), "Customer");
-INSERT INTO Users (role, username, password_hash, name) VALUES ("donor", "donor", SHA2("donor", 256), "Donor");
-INSERT INTO Users (role, username, password_hash, name) VALUES ("in_need", "in_need", SHA2("in_need", 256), "In Need");
+/*
+Test data 
+This is not for production
+Ideally, this would be separated out into something like test.sql
+*/
+
+-- create accounts for all 5 user types
+-- username and password is simply the name of the role
+INSERT INTO Users (role, username, password_hash, name) 
+VALUES ("admin", "admin", SHA2("admin", 256), "Mr. Administrator"),
+("restaurant", "restaurant", SHA2("restaurant", 256), "Mr. Restaurant"),
+("customer", "customer", SHA2("customer", 256), "Mr. Customer"),
+("donor", "donor", SHA2("donor", 256), "Mr. Donor"),
+("in_need", "in_need", SHA2("in_need", 256), "Mr. In Need");
+
+-- give Mr. Customer a credit card (but not Mr. Donor)
+INSERT INTO CreditCards (user_id, card_number, card_expiry, card_cvv)
+VALUES
+    (3, "4111111111115555", "12/30", "123"),
+
+-- give Mr. Restaurant 4 dishes (but 1 is expired)
+INSERT INTO Plates (owner_id, description, available_from, available_to, price, quantity_available)
+VALUES
+    (2, "Spaghetti Carbonara", "2024-01-01 11:00:00", "2024-01-01 16:00:00", 12.50, 5),
+    (2, "Grilled Chicken Meal", "2024-01-02 11:00:00", "2026-01-02 18:00:00", 10.00, 10),
+    (2, "Vegan Buddha Bowl", "2024-01-01 10:00:00", "2026-01-01 20:00:00", 11.75, 15),
+    (2, "Beef Stir Fry", "2024-01-03 09:00:00", "2026-01-03 21:00:00", 13.00, 20);
+
