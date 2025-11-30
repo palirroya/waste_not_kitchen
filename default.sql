@@ -68,12 +68,12 @@ Ideally, this would be separated out into something like test.sql
 
 -- Create a test account for each role 
 -- Username and password is simply the role
-INSERT INTO Users (role, username, password_hash, name) 
-VALUES ("admin", "admin", SHA2("admin", 256), "Mr. Administrator"),
-("restaurant", "restaurant", SHA2("restaurant", 256), "Mr. Restaurant"),
-("customer", "customer", SHA2("customer", 256), "Mr. Customer"),
-("donor", "donor", SHA2("donor", 256), "Mr. Donor"),
-("in_need", "in_need", SHA2("in_need", 256), "Mr. In Need");
+INSERT INTO Users (role, username, password_hash, name, address, phone) 
+VALUES ("admin", "admin", SHA2("admin", 256), "Mr. Administrator", "100 Admin St", "555-0001"),
+("restaurant", "restaurant", SHA2("restaurant", 256), "Mr. Restaurant", "200 Food Ave", "555-1111"),
+("customer", "customer", SHA2("customer", 256), "Mr. Customer", "201 Hungry Ave", "555-1112"),
+("donor", "donor", SHA2("donor", 256), "Mr. Donor", "400 Charity Ln", "555-3333"),
+("in_need", "in_need", SHA2("in_need", 256), "Mr. In Need", "500 Shelter St", "555-4444");
 
 -- Give Mr. Customer a credit card (but not Mr. Donor)
 INSERT INTO CreditCards (user_id, card_number, card_expiry, card_cvv)
