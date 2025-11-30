@@ -66,8 +66,8 @@ This is not for production
 Ideally, this would be separated out into something like test.sql
 */
 
--- create accounts for all 5 user types
--- username and password is simply the name of the role
+-- Create a test account for each role 
+-- Username and password is simply the role
 INSERT INTO Users (role, username, password_hash, name) 
 VALUES ("admin", "admin", SHA2("admin", 256), "Mr. Administrator"),
 ("restaurant", "restaurant", SHA2("restaurant", 256), "Mr. Restaurant"),
@@ -75,12 +75,12 @@ VALUES ("admin", "admin", SHA2("admin", 256), "Mr. Administrator"),
 ("donor", "donor", SHA2("donor", 256), "Mr. Donor"),
 ("in_need", "in_need", SHA2("in_need", 256), "Mr. In Need");
 
--- give Mr. Customer a credit card (but not Mr. Donor)
+-- Give Mr. Customer a credit card (but not Mr. Donor)
 INSERT INTO CreditCards (user_id, card_number, card_expiry, card_cvv)
 VALUES
-    (3, "4111111111115555", "12/30", "123"),
+    (3, "4111111111115555", "12/30", "123");
 
--- give Mr. Restaurant 4 dishes (but 1 is expired)
+-- Give Mr. Restaurant 4 dishes (but 1 is expired)
 INSERT INTO Plates (owner_id, description, available_from, available_to, price, quantity_available)
 VALUES
     (2, "Spaghetti Carbonara", "2024-01-01 11:00:00", "2024-01-01 16:00:00", 12.50, 5),
