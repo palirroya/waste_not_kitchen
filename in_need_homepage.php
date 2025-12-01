@@ -39,7 +39,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST["plate_id"], $_POST["q
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Customer Homepage</title>
+    <title>In Need Homepage</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.css">
 </head>
@@ -64,6 +64,18 @@ if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST["plate_id"], $_POST["q
         <div class="card-body">
             <table class="table table-bordered">
                 <?php
+                $limit_check = $db_conn->prepare("
+                    SELECT COUNT(*) AS cnt
+                    FROM DonatedOrderClaims
+                    WHERE in_need_user_id = ?
+                    AND status = 'in_cart'
+                ");
+                $limit_check->bind_param("i", $user_id);
+                $limit_check->execute();
+                $result = $limit_check->get_result()->fetch_assoc();
+                $current_item_count = (int)$result["cnt"];
+                $limit_reached = ($current_item_count >= 2);
+
                 $plates = $db_conn->query(" 
                     SELECT u1.name AS restaurant_name, p.description, d.quantity_available,
                     d.id, u2.name AS donator_name
@@ -94,12 +106,15 @@ if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST["plate_id"], $_POST["q
                             <form method='POST' class='d-flex gap-2'>
                                 <input type='hidden' name='plate_id' value="<?php echo $p['id'] ?>">
                                 <input class='form-control' type='number' name='quantity' min='1' max="<?php echo $p['quantity_available'] ?>" required>
-                                <button class='btn btn-success'>Add</button>
+                                <button class='btn btn-success <?php if ($limit_reached) echo "disabled"; ?> '>Add</button>
                             </form>
                         </td>
                     </tr>
                 <?php } } ?>
             </table>
+            <p class="mt-3 text-muted">
+                <i class="fa fa-info-circle"></i> You may reserve any quantity, but only <strong>2 plates</strong> can be in your cart at a time.
+            </p>
         </div>
     </div>
 
