@@ -25,7 +25,7 @@ global $db_conn;
 if (isset($_GET['id'])) {
     $card_id = intval($_GET['id']);
     
-    // etch card details
+    // fetch card details
     $stmt = $db_conn->prepare("SELECT card_number, card_expiry, card_cvv FROM CreditCards WHERE id = ? AND user_id = ?");
     $stmt->bind_param("ii", $card_id, $user_id);
     $stmt->execute();
