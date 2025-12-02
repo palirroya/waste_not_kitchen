@@ -14,6 +14,28 @@ $message = '';
 $toastClass = '';
 
 $user_id = $_SESSION["user"]["id"];
+// will need this to check role later
+$user_role = $_SESSION["user"]["role"];
+
+$back_link = "user_homepage.php";
+// determine the correct homepage based on role
+switch ($user_role) {
+    case 'restaurant':
+        $back_link = 'restaurant_homepage.php';
+        break;
+    case 'customer':
+        $back_link = 'customer_homepage.php';
+        break;
+    case 'donor':
+        $back_link = 'donor_homepage.php';
+        break;
+    case 'in_need':
+        $back_link = 'in_need_homepage.php';
+        break;
+    case 'admin':
+        $back_link = 'admin_homepage.php';
+        break;
+}
 
 db_open();
 global $db_conn;
@@ -95,29 +117,51 @@ db_close();
                     <h5 class="p-2" style="font-weight: 700;">Edit Profile</h5>
                 </div>
             </div>
+
+            <div class="mb-3">
+                <label class="form-label"><i class="fa fa-user"></i> Username</label>
+                <input type="text" class="form-control" value="<?php echo htmlspecialchars($userData['username']); ?>"
+                    disabled>
+                <div class="form-text">Username cannot be changed.</div>
+            </div>
+
             <hr class="my-4">
+
             <div class="mb-3">
                 <label for="name" class="form-label"><i class="fa fa-address-card"></i> Name <span
                         class="text-muted small">(Required)</span></label>
                 <input type="text" name="name" id="name" class="form-control"
                     value="<?php echo htmlspecialchars($userData['name']); ?>" required>
             </div>
+
             <div class="mb-3">
                 <label for="address" class="form-label"><i class="fa fa-map-marker"></i> Address</label>
                 <input type="text" name="address" id="address" class="form-control"
                     value="<?php echo htmlspecialchars($userData['address']); ?>">
             </div>
+
             <div class="mb-3">
                 <label for="phone" class="form-label"><i class="fa fa-phone"></i> Phone</label>
                 <input type="tel" name="phone" id="phone" class="form-control"
                     value="<?php echo htmlspecialchars($userData['phone']); ?>">
             </div>
+
             <div class="d-grid gap-2 mt-4">
                 <button type="submit" class="btn btn-success" style="font-weight: 600;">Update Profile</button>
             </div>
+
+            <?php if ($user_role === 'customer' || $user_role === 'donor'): ?>
+                <div class="d-grid gap-2 mt-3">
+                    <a href="user_credit_cards.php" class="btn btn-warning" style="font-weight: 600;">
+                        <i class="fa fa-credit-card"></i> Manage Credit Cards
+                    </a>
+                </div>
+            <?php endif; ?>
+
             <div class="mt-3 text-center">
                 <p style="font-weight: 600; color: navy;">
-                    Back to <a href="user_homepage.php" style="text-decoration: none;">Homepage</a>
+                    Back to <a href="<?php echo htmlspecialchars($back_link); ?>"
+                        style="text-decoration: none;">Dashboard</a>
                 </p>
             </div>
         </form>
