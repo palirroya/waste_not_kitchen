@@ -87,9 +87,9 @@ if (!$auth_is_logged_in || $_SESSION["user"]["role"] != "admin") {
 
     <!-- REPORT LINKS -->
     <a class="report-link" href="search_restaurant.php">RESTAURANT ACTIVITY REPORTS</a>
-    <a class="report-link" href="#">MEAL PURCHASE REPORTS</a>
-    <a class="report-link" href="#">NEEDY RECEIPT REPORTS</a>
-    <a class="report-link" href="#">DONOR DONATION REPORTS</a>
+    <a class="report-link" href="search_purchases.php">MEAL PURCHASE REPORTS</a>
+    <a class="report-link" href="search_needy.php">NEEDY RECEIPT REPORTS</a>
+    <a class="report-link" href="search_donation.php">DONOR DONATION REPORTS</a>
 
 </body>
 </html>

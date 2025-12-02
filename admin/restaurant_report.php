@@ -99,7 +99,6 @@ while ($stmt->fetch()) {
 }*/
 
 
-echo "</div>";
 
 $stmt->close();
 // ^
@@ -125,7 +124,6 @@ $stmt->execute();
 $stmt->bind_result($month, $monthly_revenue, $monthly_orders);
 $stmt->fetch();
 $stmt->close();
-
 
 // -------------------------------------------
 // HTML OUTPUT
@@ -182,44 +180,22 @@ $stmt->close();
 
 <div class="dashboard">
 
-    <!-- Total sales metric -->
+    <!-- TOTAL SALES -->
     <div class="metric-box">
         <h2>Total Sales This Year:</h2>
         <h1>$<?php echo $total_sales; ?></h1>
     </div>
 
-    <!-- Bar Chart --> 
+    <!-- MONTHLY SALES --> 
     <div class="metric-box">
         <h3>Monthly Plate Sales</h3>
         <canvas id="salesBarChart"></canvas>
     </div>
 
-    <!-- Revenue Line Chart -->
+    <!-- MONTHLY REVENUE -->
     <div class="metric-box">
         <h3>Monthly vs Cumulative Revenue</h3>
         <canvas id="revenueLineChart"></canvas>
-    </div>
-
-    <!-- Pie Chart -->
-    <div class="metric-box">
-        <h3>Plates Sold vs Unsold</h3>
-        <canvas id="pieChart"></canvas>
-    </div>
-
-    <!-- Collapsible Sold Plates -->
-    <div class="collapsible">View Sold Plates</div>
-    <div class="content">
-        <?php foreach ($soldPlatesList as $plate): ?>
-            <p><?= $plate['description'] ?> — $<?= $plate['total_price'] ?></p>
-        <?php endforeach; ?>
-    </div>
-
-    <!-- Collapsible Created Plates -->
-    <div class="collapsible">View Created Plates</div>
-    <div class="content">
-        <?php foreach ($createdPlatesList as $plate): ?>
-            <p><?= $plate['description'] ?> — Added: <?= $plate['available_from'] ?></p>
-        <?php endforeach; ?>
     </div>
 
 </div>
@@ -242,7 +218,10 @@ new Chart(document.getElementById("salesBarChart"), {
 <script>
 let cumulative = [];
 let sum = 0;
-monthly_revenue_json.forEach(v => { sum += v; cumulative.push(sum); });
+for (let i = 0; i < monthly_revenue_json.length; i++) {
+    sum += monthly_revenue_json[i];
+    cumulative.push(sum);
+}
 
 new Chart(document.getElementById("revenueLineChart"), {
     type: "line",
