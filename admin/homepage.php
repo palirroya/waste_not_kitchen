@@ -1,5 +1,13 @@
+
+
 <?php
 // admin_homepage.php
+require_once("../auth.php");
+auth_init();
+if (!$auth_is_logged_in || $_SESSION["user"]["role"] != "admin") {
+    header("Location: login.php");
+    exit();
+}
 ?>
 
 <!DOCTYPE html>
@@ -11,7 +19,7 @@
     <style>
         body {
             margin: 0;
-            background-color: #e8d79d;
+            background-color: #ffffff;
             font-family: Arial, sans-serif;
             text-align: center;
         }
@@ -20,9 +28,9 @@
         .navbar {
             display: flex;
             align-items: center;
-            background-color: #d4c48a;
+            background-color: #87dd62ff;
             padding: 10px 20px;
-            border-bottom: 2px solid #9b8f5b;
+            border-bottom: 2px solid #292929ff;
         }
 
         .navbar img {
@@ -67,21 +75,18 @@
 
     <!-- NAVBAR -->
     <div class="navbar">
-        <a href="index.php">
-            <img src="images/wnk_logo.png" alt="Logo">
+        <a href="../index.php">
+            <img src="../images/wnk_logo.png" alt="Logo">
         </a>
 
-        <a href="index.php">HOME</a>
-        <a href="login.php">LOG IN</a>
-        <a href="customer_homepage.php">USER HOMEPAGE</a>
-        <a href="reset_database.php">RESET DATABASE</a>
+        <a href="index.php"><-- BACK TO HOME</a>
     </div>
 
     <!-- PAGE TITLE -->
     <h1>ADMIN PAGE</h1>
 
     <!-- REPORT LINKS -->
-    <a class="report-link" href="#">RESTAURANT ACTIVITY REPORTS</a>
+    <a class="report-link" href="search_restaurant.php">RESTAURANT ACTIVITY REPORTS</a>
     <a class="report-link" href="#">MEAL PURCHASE REPORTS</a>
     <a class="report-link" href="#">NEEDY RECEIPT REPORTS</a>
     <a class="report-link" href="#">DONOR DONATION REPORTS</a>
@@ -91,11 +96,6 @@
 
 <!--
 
-require_once("auth.php");
-auth_init();
-if (!$auth_is_logged_in || $_SESSION["user"]["role"] != "admin") {
-    header("Location: login.php");
-    exit();
-}
+
 
 -->
