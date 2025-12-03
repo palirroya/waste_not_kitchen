@@ -40,7 +40,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 // redirect based on role
                 switch ($row['role']) {
                     case 'admin':
-                        $redirect = 'admin_homepage.php';
+                        $redirect = 'admin/homepage.php';
                         break;
                     case 'restaurant':
                         $redirect = 'restaurant_homepage.php';

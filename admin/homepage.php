@@ -5,7 +5,7 @@
 require_once("../auth.php");
 auth_init();
 if (!$auth_is_logged_in || $_SESSION["user"]["role"] != "admin") {
-    header("Location: login.php");
+    header("Location: ../login.php");
     exit();
 }
 ?>
@@ -79,7 +79,7 @@ if (!$auth_is_logged_in || $_SESSION["user"]["role"] != "admin") {
             <img src="../images/wnk_logo.png" alt="Logo">
         </a>
 
-        <a href="index.php"><-- BACK TO HOME</a>
+        <a href="../index.php"><-- BACK TO HOME</a>
     </div>
 
     <!-- PAGE TITLE -->
@@ -87,9 +87,8 @@ if (!$auth_is_logged_in || $_SESSION["user"]["role"] != "admin") {
 
     <!-- REPORT LINKS -->
     <a class="report-link" href="search_restaurant.php">RESTAURANT ACTIVITY REPORTS</a>
-    <a class="report-link" href="#">MEAL PURCHASE REPORTS</a>
-    <a class="report-link" href="#">NEEDY RECEIPT REPORTS</a>
-    <a class="report-link" href="#">DONOR DONATION REPORTS</a>
+    <a class="report-link" href="search_consumers.php">CUSTOMER & DONOR REPORTS</a>
+    <a class="report-link" href="search_needy.php">IN NEEDS RECEIPT REPORTS</a>
 
 </body>
 </html>
