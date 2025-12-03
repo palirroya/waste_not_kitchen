@@ -11,7 +11,7 @@
         $stmt->bind_param("i", $user_id);
         $stmt->execute();
         $card = $stmt->get_result()->fetch_assoc();
-        if (!$card) { ?>
+        if (!$card) { $no_cc = true; ?>
             <p>You do not have a saved credit card on file.</p>
         <?php } else { ?>
             <p>You will use the following saved credit card on file to complete this purchase:</p>

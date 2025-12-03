@@ -10,6 +10,7 @@ if (!$auth_is_logged_in && $_SESSION["user"]["role"] !== "customer") {
 require_once("database.php");
 db_open();
 $message = null;
+$no_cc = false;
 $actions_disabled = false;
 $user_id = $_SESSION["user"]["id"];
 
@@ -97,7 +98,7 @@ if (isset($_POST["cancel"])) {
     <?php require_once("list_credit_card_details.php"); ?>
 
     <form method="POST" class="d-flex gap-2">
-        <button name="confirm" class="btn btn-success <?php if ($actions_disabled) echo "disabled" ?>">Confirm Purchase</button>
+        <button name="confirm" class="btn btn-success <?php if ($actions_disabled || $no_cc) echo "disabled" ?>">Confirm Purchase</button>
         <button name="cancel" class="btn btn-danger <?php if ($actions_disabled) echo "disabled" ?>">Cancel Purchase</button>
     </form>
 

@@ -137,13 +137,15 @@ db_close();
             <div class="mb-3">
                 <label for="address" class="form-label"><i class="fa fa-map-marker"></i> Address</label>
                 <input type="text" name="address" id="address" class="form-control"
-                    value="<?php echo htmlspecialchars($userData['address']); ?>">
+                    value="<?php echo htmlspecialchars($userData['address']); ?>"
+                    <?php if ($_SESSION["user"]["role"] != "in_need") echo "required" ?>>
             </div>
 
             <div class="mb-3">
                 <label for="phone" class="form-label"><i class="fa fa-phone"></i> Phone</label>
                 <input type="tel" name="phone" id="phone" class="form-control"
-                    value="<?php echo htmlspecialchars($userData['phone']); ?>">
+                    value="<?php echo htmlspecialchars($userData['phone']); ?>"
+                    <?php if ($_SESSION["user"]["role"] != "in_need") echo "required" ?>>
             </div>
 
             <div class="d-grid gap-2 mt-4">
