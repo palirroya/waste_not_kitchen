@@ -44,11 +44,7 @@ $cost = 0.0;
         AND P.available_from >= DATE_SUB(NOW(), INTERVAL 1 YEAR)
     ";
     $stmt = $db_conn->prepare($sql);
-    if ($created_at_exists) {
-        $stmt->bind_param("i", $consumer_id);
-    } else {
-        $stmt->bind_param("i", $consumer_id);
-    }
+    $stmt->bind_param("i", $consumer_id);
     $stmt->execute();
     $r = $stmt->get_result();
     if ($r && ($row = $r->fetch_assoc())) {
@@ -184,14 +180,12 @@ $orders = [];
         $r->free();
     }
     $stmt->close();
-
 }
 // JSON encode arrays for charts
 $chart_month_labels = json_encode($month_labels);
 $chart_monthly_purchased = json_encode($monthly_purchased);
 $chart_monthly_cost = json_encode($monthly_cost);
 $chart_monthly_cost_cum = json_encode($monthly_cost_cumulative);
-$chart_pie = json_encode([$pie_sold, $pie_unsold]);
 
 ?>
 <!doctype html>
@@ -319,7 +313,6 @@ $chart_pie = json_encode([$pie_sold, $pie_unsold]);
   const monthlySold = <?= $chart_monthly_purchased ?>;
   const monthlyCost = <?= $chart_monthly_cost ?>;
   const monthlyCostCum = <?= $chart_monthly_cost_cum ?>;
-  const pieData = <?= $chart_pie ?>;
 
   // Bar chart: monthly purchases
   const ctxBar = document.getElementById('barSold').getContext('2d');

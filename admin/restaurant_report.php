@@ -39,13 +39,10 @@ $now_sql = $now->format('Y-m-d H:i:s');
         FROM Orders o
         JOIN Plates p ON o.plate_id = p.id
         WHERE p.owner_id = ? AND o.status = 'purchased'
-    " . $order_date_condition;
+    ";
     $stmt = $db_conn->prepare($sql);
-    if ($created_at_exists) {
-        $stmt->bind_param("iss", $restaurant_id, $start_sql, $now_sql);
-    } else {
-        $stmt->bind_param("i", $restaurant_id);
-    }
+    $stmt->bind_param("i", $restaurant_id);
+    
     $stmt->execute();
     $r = $stmt->get_result();
     if ($r && ($row = $r->fetch_assoc())) {
@@ -86,13 +83,9 @@ $total_plates_sold = 0;
         FROM Orders o
         JOIN Plates p ON o.plate_id = p.id
         WHERE p.owner_id = ? AND o.status = 'purchased'
-    " . $order_date_condition;
+    ";
     $stmt = $db_conn->prepare($sql);
-    if ($created_at_exists) {
-        $stmt->bind_param("iss", $restaurant_id, $start_sql, $now_sql);
-    } else {
-        $stmt->bind_param("i", $restaurant_id);
-    }
+    $stmt->bind_param("i", $restaurant_id);
     $stmt->execute();
     $r = $stmt->get_result();
     if ($r && ($row = $r->fetch_assoc())) {
@@ -218,26 +211,17 @@ $plates = [];
     $stmt->close();
 
     if (!empty($plates)) {
-        // fetch sold counts per plate (respecting date filter if possible)
+        // fetch sold counts per plate
         $plateIds = array_keys($plates);
-        // We'll query grouped by plate_id
         $sql = "
             SELECT O.plate_id, COALESCE(SUM(O.quantity),0) as sold_qty
             FROM Orders O
             WHERE O.plate_id IN (" . implode(',', array_map('intval', $plateIds)) . ") AND O.status = 'purchased'
         ";
-        if ($created_at_exists) {
-            $sql .= " AND O.created_at BETWEEN ? AND ? ";
-        }
         $sql .= " GROUP BY O.plate_id ";
         // prepare dynamic statement:
-        if ($created_at_exists) {
-            $stmt = $db_conn->prepare($sql);
-            // bind params: none for plate ids (inlined), then start and now
-            $stmt->bind_param("ss", $start_sql, $now_sql);
-        } else {
-            $stmt = $db_conn->prepare($sql);
-        }
+        $stmt = $db_conn->prepare($sql);
+        
         $stmt->execute();
         $r = $stmt->get_result();
         if ($r) {

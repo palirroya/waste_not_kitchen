@@ -88,12 +88,6 @@ $orders = [];
     $stmt->close();
 
 }
-// JSON encode arrays for charts
-$chart_month_labels = json_encode($month_labels);
-$chart_monthly_purchased = json_encode($monthly_purchased);
-$chart_monthly_cost = json_encode($monthly_cost);
-$chart_monthly_cost_cum = json_encode($monthly_cost_cumulative);
-$chart_pie = json_encode([$pie_sold, $pie_unsold]);
 
 ?>
 <!doctype html>
